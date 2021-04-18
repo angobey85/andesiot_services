@@ -4,7 +4,7 @@ volumes:
   vol-emqx-data:
     name: foo-emqx-data
 #  vol-emqx-etc:
-#    name: foo-emqx-etc sss
+#    name: foo-emqx-etc
   vol-emqx-log:
     name: foo-emqx-log
 
