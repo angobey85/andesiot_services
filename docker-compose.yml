@@ -39,7 +39,7 @@ services:
 
     volumes: 
       - vol-emqx-data:/opt/emqx/data
-  #    - vol-emqx-etc:/opt/emqx/etc
+      - vol-emqx-etc:/opt/emqx/etc
       - vol-emqx-log:/opt/emqx/log
 
 
@@ -54,6 +54,9 @@ services:
       EMQX_NAME: ANDESIOT
       EMQX_HOST: 127.0.0.1
       TZ: "${TZ}"
+      listener.ssl.external.certfile = etc/certs/cert.pem
+
+      EMQX_LISTENER__SSL__EXTERNAL__CERTFILE:
 
       # CONTRASEÑA POR DEFECTO
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "${EMQX_PASSWORD}"
