@@ -39,7 +39,7 @@ services:
 
     volumes: 
       - vol-emqx-data:/opt/emqx/data
-      - vol-emqx-etc:/opt/emqx/etc
+      - ./letsencrypt/archive/npm-8/:/opt/emqx/etc/certs
       - vol-emqx-log:/opt/emqx/log
 
 
@@ -54,12 +54,22 @@ services:
       EMQX_NAME: ANDESIOT
       EMQX_HOST: 127.0.0.1
       TZ: "${TZ}"
-      listener.ssl.external.certfile = etc/certs/cert.pem
 
-      EMQX_LISTENER__SSL__EXTERNAL__CERTFILE:
+      EMQX_LISTENER__SSL__EXTERNAL__KEYFILE: etc/certs/privkey1.pem
+      EMQX_LISTENER__SSL__EXTERNAL__CERTFILE: etc/certs/fullchain1.pem
+
+
+      EMQX_LISTENER__WSS__EXTERNAL__KEYFILE: etc/certs/privkey1.pem
+      EMQX_LISTENER__WSS__EXTERNAL__CERTFILE: etc/certs/fullchain1.pem
 
       # CONTRASEÑA POR DEFECTO
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "${EMQX_PASSWORD}"
+      EMQX_DASHBOARD__LISTENER__HTTPS__ACCESS__1: allow all
+      EMQX_DASHBOARD__LISTENER__HTTPS: 18084
+      EMQX_DASHBOARD__LISTENER__HTTPS__ACCEPTORS: 2
+      EMQX_DASHBOARD__LISTENER__HTTPS__MAX_CLIENTS: 512
+      EMQX_DASHBOARD__LISTENER__HTTPS__KEYFILE: etc/certs/privkey1.pem
+      EMQX_DASHBOARD__LISTENER__HTTPS__CERTFILE: etc/certs/fullchain1.pem
 
       # 
       EMQX_MANAGEMENT__DEFAULT_APPLICATION__SECRET: "${EMQX_APPLICATION_SECRET}"

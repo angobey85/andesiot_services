@@ -10,6 +10,21 @@ volumes:
 
 services:
 
+  app:
+    container_name: nginx
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
   node:
     container_name: node
     image: "node:14"
@@ -73,8 +88,21 @@ services:
       EMQX_HOST: 127.0.0.1
       TZ: "${TZ}"
 
+      EMQX_LISTENER__SSL__EXTERNAL__KEYFILE: etc/certs/privkey1.pem
+      EMQX_LISTENER__SSL__EXTERNAL__CERTFILE: etc/certs/fullchain1.pem
+
+
+      EMQX_LISTENER__WSS__EXTERNAL__KEYFILE: etc/certs/privkey1.pem
+      EMQX_LISTENER__WSS__EXTERNAL__CERTFILE: etc/certs/fullchain1.pem
+
       # CONTRASEÑA POR DEFECTO
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "${EMQX_PASSWORD}"
+      EMQX_DASHBOARD__LISTENER__HTTPS__ACCESS__1: allow all
+      EMQX_DASHBOARD__LISTENER__HTTPS: 18084
+      EMQX_DASHBOARD__LISTENER__HTTPS__ACCEPTORS: 2
+      EMQX_DASHBOARD__LISTENER__HTTPS__MAX_CLIENTS: 512
+      EMQX_DASHBOARD__LISTENER__HTTPS__KEYFILE: etc/certs/privkey1.pem
+      EMQX_DASHBOARD__LISTENER__HTTPS__CERTFILE: etc/certs/fullchain1.pem
 
       # 
       EMQX_MANAGEMENT__DEFAULT_APPLICATION__SECRET: "${EMQX_APPLICATION_SECRET}"
