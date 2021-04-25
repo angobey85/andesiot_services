@@ -10,20 +10,30 @@ volumes:
 
 services:
 
-  app:
-    container_name: nginx
-    image: "jc21/nginx-proxy-manager:latest"
-    restart: always
+  vesta:
+    image: niiknow/vestacp
+    container_name: vesta
+    cap_add: ['NET_RAW', 'NET_ADMIN']
+    hostname: andesiot.cl
+    volumes:
+      - "/opt/vestacp/backup:/backup"
+      - "/opt/vestacp/vesta:/vesta"
+      - "/opt/vestacp/home:/home"
     ports:
+      - "3322:22"
       - "80:80"
       - "443:443"
-      - "81:81"
-
-    environment:
-      DB_SQLITE_FILE: "/data/database.sqlite"
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - "2083:8083"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    sysctls:
+      net.core.somaxconn: '511'
+    labels:
+      - "Vesta Control Panel"
+    restart: always
 
   node:
     container_name: node
